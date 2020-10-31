@@ -1,44 +1,44 @@
 const Discord = module.require("discord.js");
 
 module.exports.run = async (client, message, args, db) => {
-    const query = client.db;    
-    
-    function embedFail(text) {
-        let embed = new Discord.RichEmbed()
-    .setColor("#ff0000")
-    .setDescription(text);
+	const query = client.db;
 
-    return embed
-    }
+	function embedFail(text) {
+		const embed = new Discord.RichEmbed()
+			.setColor("#ff0000")
+			.setDescription(text);
 
-    function embedSuccess(text) {
-        let embed = new Discord.RichEmbed()
-    .setColor("#7CFC00")
-    .setDescription(text);
+		return embed;
+	}
 
-    return embed
-    }
+	function embedSuccess(text) {
+		const embed = new Discord.RichEmbed()
+			.setColor("#7CFC00")
+			.setDescription(text);
 
-    let toCheck = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
-    if (!toCheck) return message.channel.send("Please specify a user to check!");
+		return embed;
+	}
 
-    let res = await query(`select * from user_roles where guild_id = '${message.guild.id}' and user_id = '${toCheck.id}'`);
-    if(!res[0]) return message.channel.send(embedFail(`This user does not have a role!`));
+	const toCheck = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
+	if (!toCheck) return message.channel.send("Please specify a user to check!");
 
-    let myRole = message.guild.roles.get(res[0].role_id);
+	const res = await query(`select * from user_roles where guild_id = '${message.guild.id}' and user_id = '${toCheck.id}'`);
+	if (!res[0]) return message.channel.send(embedFail("This user does not have a role!"));
 
-    let embed = new Discord.RichEmbed()
-    .setAuthor(`Current role assigned to ${toCheck.user.username}#${toCheck.user.discriminator}`, message.guild.iconURL)
-    .setColor(myRole.hexColor)
-    .addField(`Roles`, `${myRole.name}`, true)
-    .addField(`Colour`,`${myRole.hexColor}`, true);
+	const myRole = message.guild.roles.get(res[0].role_id);
 
-    await message.channel.send(embed);
-}
+	const embed = new Discord.RichEmbed()
+		.setAuthor(`Current role assigned to ${toCheck.user.username}#${toCheck.user.discriminator}`, message.guild.iconURL)
+		.setColor(myRole.hexColor)
+		.addField("Roles", `${myRole.name}`, true)
+		.addField("Colour", `${myRole.hexColor}`, true);
+
+	await message.channel.send(embed);
+};
 
 exports.help = {
-    name: "checkrole",
-    description: "Checks a assigned user role.",
-    usage: "checkrole",
-}
+	name: "checkrole",
+	description: "Checks a assigned user role.",
+	usage: "checkrole",
+};
 

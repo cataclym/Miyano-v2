@@ -1,12 +1,12 @@
-const Discord = require('discord.js');
+// const Discord = require("discord.js");
 
-exports.run = async (client, message, args) => {
-    
-}
+// exports.run = async (client, message, args) => {
 
-exports.help = {
-    name: "",
-    aliases: [
-        ''
-    ]
-}
+// };
+
+// exports.help = {
+// 	name: "",
+// 	aliases: [
+// 		"",
+// 	],
+// };

@@ -1,58 +1,59 @@
-let Discord = require("discord.js");
+const Discord = require("discord.js");
 
 exports.run = async (client, message, args) => {
-    let user = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
-    if(!user) return message.channel.send(embedFail(`Please specify a valid user or ID!`));
-    if(user.highestRole.position >= message.member.highestRole.position) return message.channel.send(embedFail('You cannot mute a member who has a higher or the same role as you!'));
+	const user = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
+	if (!user) return message.channel.send(embedFail("Please specify a valid user or ID!"));
+	if (user.highestRole.position >= message.member.highestRole.position) return message.channel.send(embedFail("You cannot mute a member who has a higher or the same role as you!"));
 
-    let role = message.guild.roles.find(r => r.name == 'Muted');
-    if(!role) {
-        try {
-            role = await message.guild.createRole({
-                name: 'Muted',
-                permissions: []
-            });
-    
-            message.guild.channels.forEach(async (channel, id) => {
-                await channel.overwritePermissions(role, {
-                    SEND_MESSAGES: false,
-                    ADD_REACTIONS: false,
-                })
-            })
-        } catch(e) {
-            
-        }
-    }
+	let role = message.guild.roles.find(r => r.name == "Muted");
+	if (!role) {
+		try {
+			role = await message.guild.createRole({
+				name: "Muted",
+				permissions: [],
+			});
 
-    if(user.roles.has(role.id)) return message.channel.send(embedFail(`**${user}** is already muted.`));
+			message.guild.channels.forEach(async (channel, id) => {
+				await channel.overwritePermissions(role, {
+					SEND_MESSAGES: false,
+					ADD_REACTIONS: false,
+				});
+			});
+		}
+		catch (e) {
 
-    await user.addRole(role);
-    message.channel.send(embedSuccess(`Successfully muted ${user}.`));
-}
+		}
+	}
+
+	if (user.roles.has(role.id)) return message.channel.send(embedFail(`**${user}** is already muted.`));
+
+	await user.addRole(role);
+	message.channel.send(embedSuccess(`Successfully muted ${user}.`));
+};
 
 
 exports.help = {
-    name: "mute",
-    description: "Mutes the user.",
-    usage: "mute @Platinum#0001",
-    permissions: 
+	name: "mute",
+	description: "Mutes the user.",
+	usage: "mute @Platinum#0001",
+	permissions:
     [
-        'MANAGE_MESSAGES', 'MUTE_MEMBERS'
-    ]
-}
+    	"MANAGE_MESSAGES", "MUTE_MEMBERS",
+    ],
+};
 
 function embedFail(text) {
-    let embed = new Discord.RichEmbed()
-.setColor("#ff0000")
-.setDescription(text);
+	const embed = new Discord.RichEmbed()
+		.setColor("#ff0000")
+		.setDescription(text);
 
-return embed
+	return embed;
 }
 
 function embedSuccess(text) {
-    let embed = new Discord.RichEmbed()
-.setColor("#7CFC00")
-.setDescription(text);
+	const embed = new Discord.RichEmbed()
+		.setColor("#7CFC00")
+		.setDescription(text);
 
-return embed
+	return embed;
 }
